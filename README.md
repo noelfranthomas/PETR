@@ -16,6 +16,10 @@ Prevalence & Incidence Metrics
 
 https://www.uwmedicine.org/conditions-symptoms
 
+NER:
+https://cs230.stanford.edu/blog/namedentity/
+
+
 ```mermaid
   graph TD;
   A[Data source A]-->K[Knowledge Graph];
