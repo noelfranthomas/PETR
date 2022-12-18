@@ -12,3 +12,5 @@ URL = "https://www.nhsinform.scot/illnesses-and-conditions/heart-and-blood-vesse
 driver.get(URL)
 
 guide_navigation_container = driver.find_element(By.ID, "guide-navigation")
+
+print()
