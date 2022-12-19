@@ -25,62 +25,89 @@ def condition_scraper(url):
 
         links = guide_navigation_container.find_elements(By.TAG_NAME, "a")
 
+        elems = []
+        p_index = 0
+
         for link in links:
             link.click()
 
             active_container = driver.find_element(By.CSS_SELECTOR, "div.active")
-            editor = active_container.find_element(By.CLASS_NAME, "editor")
+            editors = active_container.find_elements(By.CLASS_NAME, "editor")
 
-            all_elems = editor.find_elements(By.CSS_SELECTOR, "*")
+            for editor in editors:
+                all_elems = editor.find_elements(By.CSS_SELECTOR, "*")
+
+                for elem in all_elems:
+                    if elem.tag_name == "h2":
+                        elems.append(elem.text)
+                        p_index = len(elems)
+                    elif elem.tag_name == "p":
+                        try:
+                            elems[p_index] += (" " + elem.text)
+                        except IndexError:
+                            elems.append(elem.text)
+                    elif elem.tag_name == "a":
+                        try:
+                            elems[p_index] += (" [" + elem.text + "]")
+                        except IndexError:
+                            elems.append(elem.text)
+
+    except NoSuchElementException:
+        try:
+            active_container = driver.find_element(By.CSS_SELECTOR, "div.tab")
+            editors = active_container.find_elements(By.CLASS_NAME, "editor")
 
             elems = []
             p_index = 0
 
-            for elem in all_elems:
-                if elem.tag_name == "h2":
-                    elems.append(elem.text)
-                    p_index = len(elems)
-                elif elem.tag_name == "p":
-                    try:
-                        elems[p_index] += (" " + elem.text)
-                    except IndexError:
+            for editor in editors:
+                all_elems = editor.find_elements(By.CSS_SELECTOR, "*")
+
+                for elem in all_elems:
+                    if elem.tag_name == "h2":
                         elems.append(elem.text)
-                elif elem.tag_name == "a":
-                    try:
-                        elems[p_index] += (" [" + elem.text + "]")
-                    except IndexError:
+                        p_index = len(elems)
+                    elif elem.tag_name == "p":
+                        try:
+                            elems[p_index] += (" " + elem.text)
+                        except IndexError:
+                            elems.append(elem.text)
+                    elif elem.tag_name == "a":
+                        try:
+                            elems[p_index] += (" [" + elem.text + "]")
+                        except IndexError:
+                            elems.append(elem.text)
+        except:
+            # active_container = driver.find_element(By.CSS_SELECTOR, "div.tab")
+            editors = driver.find_elements(By.CLASS_NAME, "editor")
+
+            elems = []
+            p_index = 0
+
+            for editor in editors:
+                all_elems = editor.find_elements(By.CSS_SELECTOR, "*")
+
+                for elem in all_elems:
+                    if elem.tag_name == "h2":
                         elems.append(elem.text)
-    except NoSuchElementException:
-        active_container = driver.find_element(By.CSS_SELECTOR, "div.tab")
-        editor = active_container.find_element(By.CLASS_NAME, "editor")
-
-        all_elems = editor.find_elements(By.CSS_SELECTOR, "*")
-
-        elems = []
-        p_index = 0
-
-        for elem in all_elems:
-            if elem.tag_name == "h2":
-                elems.append(elem.text)
-                p_index = len(elems)
-            elif elem.tag_name == "p":
-                try:
-                    elems[p_index] += (" " + elem.text)
-                except IndexError:
-                    elems.append(elem.text)
-            elif elem.tag_name == "a":
-                try:
-                    elems[p_index] += (" [" + elem.text + "]")
-                except IndexError:
-                    elems.append(elem.text)
-        
+                        p_index = len(elems)
+                    elif elem.tag_name == "p":
+                        try:
+                            elems[p_index] += (" " + elem.text)
+                        except IndexError:
+                            elems.append(elem.text)
+                    elif elem.tag_name == "a":
+                        try:
+                            elems[p_index] += (" [" + elem.text + "]")
+                        except IndexError:
+                            elems.append(elem.text)
     
     f_name = join("data", condition_type_url_param, condition_url_param + ".md")
 
     if not isdir(join("data", condition_type_url_param)):
         makedirs(join("data", condition_type_url_param))
 
-    with open(f_name, 'w') as f:
+    with open(f_name, 'a') as f:
         for e in elems:
             f.write(e)
             f.write("\n")
@@ -88,4 +115,6 @@ def condition_scraper(url):
 
 if __name__ == "__main__":
     URL = "https://www.nhsinform.scot/illnesses-and-conditions/stomach-liver-and-gastrointestinal-tract/acute-cholecystitis/"
+    URL = "https://www.nhsinform.scot/illnesses-and-conditions/mental-health/anxiety/"
+    URL = "https://www.nhsinform.scot/illnesses-and-conditions/sexual-and-reproductive/bacterial-vaginosis/"
     condition_scraper(URL)

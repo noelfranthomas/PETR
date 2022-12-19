@@ -26,9 +26,9 @@ def directory_scraper(url="https://www.nhsinform.scot/illnesses-and-conditions/a
                 print(a.get_attribute("href"))
                 try:
                     condition_scraper(a.get_attribute("href"))
-                except NoSuchElementException:
-                    with open("log.txt", 'w') as f:
-                        f.write("Failed to scrape: " + a.get_attribute("href"))
+                except Exception as e:
+                    with open("data/log.txt", 'a') as f:
+                        f.write("Failed to scrape: " + a.get_attribute("href") + "\n" + str(e))
 
 if __name__ == "__main__":
     directory_scraper()
