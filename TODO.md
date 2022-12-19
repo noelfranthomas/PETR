@@ -1,8 +1,8 @@
 # TODO
 
 1. Build Knowledge Graph
-    a. Webscraper for data sources
-2. Build Simulated environemnt
+    - Webscraper for data sources
+2. Build simulated environemnt
 3. Give brain to computer (from Wonderland) to decide
 
 
