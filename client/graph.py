@@ -24,3 +24,5 @@
 #   - Spacy RE: https://www.youtube.com/watch?v=8HL-Ap5_Axo
 #       - Tokenizer: TikToken: https://github.com/openai/tiktoken
 #   - Use REBEL Larg from HF
+# https://huggingface.co/spaces/ml6team/Knowledge-graphs
+# https://huggingface.co/Babelscape/rebel-large
