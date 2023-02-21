@@ -1,5 +1,13 @@
 # TODO
 
+1. Scrape data sources
+2. Fine tune REBEL model
+3. Upload into Neo4j Graph database (auroraDB)
+
+
+
+
+
 1. Build Knowledge Graph
     - Webscraper for data sources
 2. Build simulated environemnt
