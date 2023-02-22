@@ -261,3 +261,7 @@ DEBUG:Chroma:time to pre process our knn query: 2.1457672119140625e-06
 DEBUG:Chroma:time to run knn query: 0.00010180473327636719
 DEBUG:Chroma:time to pre process our knn query: 1.9073486328125e-06
 DEBUG:Chroma:time to run knn query: 0.00017404556274414062
+DEBUG:Chroma:time to pre process our knn query: 1.9073486328125e-06
+DEBUG:Chroma:time to run knn query: 0.00015497207641601562
+DEBUG:Chroma:time to pre process our knn query: 3.0994415283203125e-06
+DEBUG:Chroma:time to run knn query: 0.00015473365783691406
