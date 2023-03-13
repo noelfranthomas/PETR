@@ -17,6 +17,9 @@ for category in categories:
     collection.add(documents=fullpaths, metadatas=[{'category_name': category.replace('-', " ")}]*len(files), ids=conditions)
 
 if __name__ == "__main__":
+
+    print('\nentering test mode: \n\n')
+
     while True:
         print("Enter symptoms: ")
         query = input()
