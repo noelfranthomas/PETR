@@ -1,5 +1,6 @@
 import chromadb
 import os
+import time
 
 chroma_client = chromadb.Client()
 
@@ -22,14 +23,19 @@ if __name__ == "__main__":
 
     while True:
         print("Enter symptoms: ")
+        
         query = input()
+
+        start_t = time.time()
         results = collection.query(
             query_texts=[query],
             n_results=3
         )
+        end_t = time.time()
         
         print('Possible conditions:')
         print(results['ids'])
         print('Category:')
         print(results['metadatas'])
+        print('Time taken:' + str(end_t - start_t) + ' seconds')
         print()
