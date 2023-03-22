@@ -8,6 +8,8 @@ collection = chroma_client.create_collection(name="petr_vectorstore")
 
 categories = next(os.walk('/Users/noelthomas/Documents/GitHub/PETR/data/'))[1]
 
+num_docs = []
+
 for category in categories:
     print("loading: " + str(category))
     files = os.listdir(f'/Users/noelthomas/Documents/GitHub/PETR/data/{category}')
@@ -16,6 +18,12 @@ for category in categories:
     conditions = [f.replace("-", " ") for f in files]
     
     collection.add(documents=fullpaths, metadatas=[{'category_name': category.replace('-', " ")}]*len(files), ids=conditions)
+
+    num_docs.append(len(files))
+
+print(f"loaded {num_docs} documents")
+print(f"avg documents per category: {sum(num_docs)/len(num_docs)}")
+print(f"total # categories: {len(num_docs)}")
 
 if __name__ == "__main__":
 
