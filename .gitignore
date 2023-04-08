@@ -5,3 +5,8 @@ data/
 .chroma/
 .ipynb_checkpoints
 chroma_logs.log
+submitted_other/
+
+__pycache__/
+v/
+text-to-kb/networks/
