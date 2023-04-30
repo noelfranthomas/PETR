@@ -35,34 +35,25 @@ class KB():
                             if span not in r1["meta"][article_url]["spans"]]
             r1["meta"][article_url]["spans"] += spans_to_add
 
-    def get_wikipedia_data(self, candidate_entity, disabled=False):
-
-        if not disabled:
-            try:
-                page = wikipedia.page(candidate_entity, auto_suggest=False)
-                entity_data = {
-                    "title": page.title,
-                    "url": page.url,
-                    "summary": page.summary
-                }
-                return entity_data
-            except:
-                return None
-        else:
+    def get_wikipedia_data(self, candidate_entity):
+        try:
+            page = wikipedia.page(candidate_entity, auto_suggest=False)
             entity_data = {
-                "title": candidate_entity,
-                "url": "",
-                "summary": ""
+                "title": page.title,
+                "url": page.url,
+                "summary": page.summary
             }
             return entity_data
+        except:
+            return None
 
     def add_entity(self, e):
         self.entities[e["title"]] = {k:v for k,v in e.items() if k != "title"}
-  
-    def add_relation(self, r, article_title="", article_publish_date=""):
+
+    def add_relation(self, r, article_title, article_publish_date):
         # check on wikipedia
         candidate_entities = [r["head"], r["tail"]]
-        entities = [self.get_wikipedia_data(ent, disabled=True) for ent in candidate_entities]
+        entities = [self.get_wikipedia_data(ent) for ent in candidate_entities]
 
         # if one entity does not exist, stop
         if any(ent is None for ent in entities):
@@ -93,8 +84,6 @@ class KB():
     def get_textual_representation(self):
         res = ""
         res += "### Entities\n"
-        num_entities = len(self.entities)
-        num_relations = len(self.relations)
         for e in self.entities.items():
             # shorten summary
             e_temp = (e[0], {k:(v[:100] + "..." if k == "summary" else v) for k,v in e[1].items()})
@@ -107,4 +96,4 @@ class KB():
         res += "### Sources\n"
         for s in self.sources.items():
             res += f"- {s}\n"
-        return res, num_entities, num_relations
+        return res

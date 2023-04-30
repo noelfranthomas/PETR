@@ -5,7 +5,6 @@ import math
 import torch
 from kb import KB
 import pickle
-import os
 
 def extract_relations_from_model_output(text):
     relations = []
@@ -116,15 +115,53 @@ def from_text_to_kb(text, model, tokenizer, article_url, span_length=128, articl
             kb.add_relation(relation, article_title, article_publish_date)
         i += 1
 
-    return kb, num_tokens
+    return kb
 
+def get_article(url):
+    article = Article(url)
+    article.download()
+    article.parse()
+    return article
+
+def from_url_to_kb(url, model, tokenizer):
+    article = get_article(url)
+    config = {
+        "article_title": article.title,
+        "article_publish_date": article.publish_date
+    }
+    kb = from_text_to_kb(article.text, model, tokenizer, article.url, **config)
+    return kb
+
+def get_news_links(query, lang="en", region="US", pages=1):
+    googlenews = GoogleNews(lang=lang, region=region)
+    googlenews.search(query)
+    all_urls = []
+    for page in range(pages):
+        googlenews.get_page(page)
+        all_urls += googlenews.get_links()
+    return list(set(all_urls))
+
+def from_urls_to_kb(urls, model, tokenizer, verbose=False):
+    kb = KB()
+    if verbose:
+        print(f"{len(urls)} links to visit")
+    for url in urls:
+        if verbose:
+            print(f"Visiting {url}...")
+        try:
+            kb_url = from_url_to_kb(url, model, tokenizer)
+            kb.merge_with_kb(kb_url)
+        except ArticleException:
+            if verbose:
+                print(f"  Couldn't download article at url {url}")
+    return kb
 
 def save_network_html(kb, filename="network.html"):
     # create network
-    net = Network(directed=True, width="700px", height="700px", bgcolor="#101216", font_color="white")
+    net = Network(directed=True, width="700px", height="700px")
 
     # nodes
-    color_entity = "#003366"
+    color_entity = "#00FF00"
     for e in kb.entities:
         net.add_node(e, shape="circle", color=color_entity)
 
@@ -142,15 +179,11 @@ def save_network_html(kb, filename="network.html"):
         damping=0.09
     )
     net.set_edge_smooth('dynamic')
-
-    net.save_graph(filename)
+    net.show(filename)
 
 def save_kb(kb, filename):
-    if os.path.exists(filename):
-        with open(filename, "wb") as f:
-            pickle.dump(kb, f)
-    else:
-        pickle.dump(kb, filename)
+    with open(filename, "wb") as f:
+        pickle.dump(kb, f)
 
 class CustomUnpickler(pickle.Unpickler):
     def find_class(self, module, name):
